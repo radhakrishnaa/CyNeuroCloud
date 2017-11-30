@@ -142,17 +142,21 @@ class WorkflowController extends Controller
     {
         // Validate the request...
 
-        $param = new Parameters;
+    
+        $name1 = $request->name;
+        $name2 = $request->name1;
+    
 
-        $param->duration = $request->duration;
+            $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+            $txt = "ID:" . $name1. PHP_EOL;
+            fwrite($myfile, $txt);
+            $txt = $name2.PHP_EOL;
+            fwrite($myfile, $txt);
+            fclose($myfile);
+            
+            return "Success";
 
-        $param->amplitude = $request->amplitude;
-
-        $param->weight = $request->weight;
-
-        $param->interval = $request->interval;
-
-        $param->save();
+        // $param->save();
     }
 
 
