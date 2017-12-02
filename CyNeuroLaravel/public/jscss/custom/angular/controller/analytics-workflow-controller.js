@@ -15,8 +15,6 @@ system_app.controller('analytics-workflow-create', function($scope, $http) {
     }).then(function success(response, status, headers, config){
 
         $scope.tools = response.data.tool;
-        console.log($scope.tools)
-
     }, function error(response, status, headers, config){
     });
 
@@ -36,9 +34,6 @@ system_app.controller('analytics-workflow-create', function($scope, $http) {
             tool : $scope.selected_tool
         };
 
-
-
-        console.log(get_run_workflow_params);
 
 
         // dateSubmitted:"2017-11-07T15:53:47-08:00"

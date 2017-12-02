@@ -5,6 +5,11 @@ namespace App\Http\Controllers\System\Analytics;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
+use App\Current_injection;
+use Redirect;
+use ZipArchive;
+use DB;
+use Exception;
 
 class WorkflowController extends Controller
 {
@@ -27,10 +32,6 @@ class WorkflowController extends Controller
         return view('system/analytics/workflow');
 
     }
-
-
-
-
 
 
     // API
@@ -140,6 +141,9 @@ class WorkflowController extends Controller
 
     public function store_params(Request $request)
     {
+
+        
+        $val =0;
         // Validate the request...
 
         if($request->id ==1)
@@ -171,8 +175,25 @@ class WorkflowController extends Controller
             fwrite($myfile, $txt);
             fclose($myfile);
             
-           
-         
+            $cur_dir = getcwd();
+            $zip = new ZipArchive();
+            $zip->open($cur_dir.'/CyNeuroSimpleWorkflowExample.zip', ZipArchive::CREATE);
+            $zip->addFile($cur_dir.'/SimpleCurrentInjection.cfg', 'CyNeuroSimpleWorkflowExample/SimpleCurrentInjection.cfg');
+            $zip->close();
+            $val =1;
+
+                $injection = new Current_injection;
+             
+               $injection->delay= $delay;
+               $injection->duration=$duration;
+               $injection->amplitude=$amplitude;
+               $injection->save();
+
+    //         DB::table('current_injection')->insert(
+    //     array('delay' => $delay, 'duration' => $duration, 'amplitude' => $amplitude)
+    // );
+
+
         }
 
         else if($request->id ==2)
@@ -208,12 +229,21 @@ class WorkflowController extends Controller
             $txt = "noise = " . $noise. PHP_EOL;
             fwrite($myfile, $txt);
             fclose($myfile);
+            $cur_dir = getcwd();
+            $zip = new ZipArchive();
+            $zip->open($cur_dir.'/CyNeuroSimpleWorkflowExample.zip', ZipArchive::CREATE);
+            $zip->addFile($cur_dir.'/SimpleSynapse.cfg', 'CyNeuroSimpleWorkflowExample/SimpleSynapse.cfg');
+            $zip->close();
+
+            $val =2;
         }
         
-    
+             return $val;
 
-            return "Success";
 
+
+
+           
         // $param->save();
     }
 
