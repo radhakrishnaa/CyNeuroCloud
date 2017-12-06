@@ -1,13 +1,8 @@
   system_app.controller('neuron-workflow-show', function($scope, $http, $window) {
 
-
-
-
-
-
     $scope.run_func = function() {
 
-
+          var jobName = document.getElementById("jobName").value;
       if ($("input:radio[name=inj_mod]:checked").val() == 1) {
         var delay = document.getElementById("delay").value;
         var duration = document.getElementById("duration").value;
@@ -16,7 +11,8 @@
           id :1,  
           delay : delay,
           duration : duration,
-          amplitude : amplitude
+          amplitude : amplitude,
+          jobname: jobName
 
         };
 
@@ -31,7 +27,8 @@
           interval : interval,
           number : number,
           noise : noise,
-          start : start
+          start : start,
+          jobname: jobName
 
 
         };
@@ -46,10 +43,8 @@
 
       }).then(function success(response, status, headers, config){
 
-           //$scope.tool = response.data.val;
-           console.log(response.data);
-           $window.location.href = "http://" + $window.location.host + "/system/analytics/databworkflow_pageases_page";
-          
+            $scope.singlePage4 = false;
+            $scope.singlePage5 = true;
 
         }, function error(response, status, headers, config){
 
@@ -130,6 +125,7 @@
     $scope.singlePage2 = false;
     $scope.singlePage3 = false;
     $scope.singlePage4 = false;
+    $scope.singlePage5 = false;
     
 
     $scope.singlechangeView = function(val){
@@ -139,6 +135,7 @@
         $scope.singlePage2 = false;
         $scope.singlePage3 = false;
         $scope.singlePage4 = false;
+         $scope.singlePage5 = false;
 
         
       } else if (val == 'singleView1') {
@@ -148,6 +145,7 @@
         $scope.singlePage2 = false;
         $scope.singlePage3 = false;
         $scope.singlePage4 = false;
+         $scope.singlePage5 = false;
         
       } else if (val == 'singleView2') {
         $scope.firstPage = false;
@@ -155,6 +153,7 @@
         $scope.singlePage2 = true;
         $scope.singlePage3 = false;
         $scope.singlePage4 = false;
+         $scope.singlePage5 = false;
         
         
       }
@@ -164,6 +163,7 @@
         $scope.singlePage2 = false;
         $scope.singlePage3 = true;
         $scope.singlePage4 = false;
+         $scope.singlePage5 = false;
         
         
       }
@@ -173,6 +173,18 @@
         $scope.singlePage2 = false;
         $scope.singlePage3 = false;
         $scope.singlePage4 = true;
+        $scope.singlePage5 = false;
+        
+        
+      }
+
+      else if (val == 'singleView5') {
+        $scope.firstPage = false;
+        $scope.singlePage1 = false;
+        $scope.singlePage2 = false;
+        $scope.singlePage3 = false;
+        $scope.singlePage4 = false;
+        $scope.singlePage5 = true;
         
         
       }
@@ -181,10 +193,64 @@
       
     }
 
-    
-    
+
+  $scope.show_run_button = true;
+
+    // Get tools list
+    $scope.tools = {};
+    var get_tools_list_params = {
+    };
+
+    $http({
+        method:'get',
+        url:php_get_job_submit_url,
+        params:get_tools_list_params
+    }).then(function success(response, status, headers, config){
+
+        $scope.tools = response.data.tool;
+    }, function error(response, status, headers, config){
+    });
+
+    $scope.func_run = function() {
+
+        file_list_str = input_file_list.join();
+
+        
+        var get_run_workflow_params = {
+            file_list_str : file_list_str,
+            tool : $scope.selected_tool
+        };
+
+       
+        // dateSubmitted:"2017-11-07T15:53:47-08:00"
+        // failed:"false"
+        // jobHandle:"NGBW-JOB-BLUEPYOPT_TG-50BC4ACEF9054F68898F74C44D78BF9E"
+        // jobStage:"QUEUE"
+
+        $http({
+            method:'get',
+            url:php_get_job_submit_url,
+            params:get_run_workflow_params
+        }).then(function success(response, status, headers, config){
+
+            if(response.data != '') {
+              
+                $scope.submit_time = response.data.dateSubmitted
+                $scope.jobID = response.data.jobHandle
+                $scope.show_run = true;
+
+                $scope.show_run_button = false;
+            }
+
+        }, function error(response, status, headers, config){
+        });
+
+    };
 
   });
 
+
+
+  
 
 

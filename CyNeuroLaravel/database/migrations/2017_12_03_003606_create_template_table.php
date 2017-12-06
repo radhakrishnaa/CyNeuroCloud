@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCurrentInjection extends Migration
+class CreateTemplateTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateCurrentInjection extends Migration
      */
     public function up()
     {
-         Schema::create('current_injection', function (Blueprint $table) {
+         Schema::create('template', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('delay');
-            $table->integer('duration');
-            $table->integer('amplitude');
-        }); 
+            $table->string('usecase_name');
+            //$table->string('description');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -28,6 +28,6 @@ class CreateCurrentInjection extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('current_injection');
+        Schema::dropIfExists('template');
     }
 }
